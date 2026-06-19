@@ -43,7 +43,7 @@ export default function DashboardTab({ mainCharacter }) {
           <div className="material-card">
             <div className="material-icon">🎫</div>
             <div className="material-info">
-              <span className="material-value">{currencies.abyss}</span>
+              <span className="material-value">{formatNumber(currencies.abyss)}</span>
               <span className="material-name">Total Cumulative</span>
             </div>
           </div>
