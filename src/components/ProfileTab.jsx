@@ -1,9 +1,10 @@
 import React from 'react';
 
-export default function ProfileTab({ mainCharacter, onUpdateGear }) {
+export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
   const { name, class: charClass, power, server, guild, bio, avatar, equipment } = mainCharacter;
 
   const handleGearClick = (gearId, currentName, gearType) => {
+    if (!isAdmin) return;
     const newName = prompt(`Ubah nama untuk ${gearType}:`, currentName);
     if (newName !== null && newName.trim() !== "") {
       onUpdateGear(gearId, newName.trim());
@@ -60,6 +61,8 @@ export default function ProfileTab({ mainCharacter, onUpdateGear }) {
                 key={gear.id} 
                 className={`gear-slot rarity-${gear.rarity}`}
                 onClick={() => handleGearClick(gear.id, gear.name, gear.type)}
+                style={{ cursor: isAdmin ? 'pointer' : 'default' }}
+                title={isAdmin ? 'Klik untuk edit nama gear' : ''}
               >
                 <div className="gear-icon-box">{gear.icon}</div>
                 <div className="gear-details">

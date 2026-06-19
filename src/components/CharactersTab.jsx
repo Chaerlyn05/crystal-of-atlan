@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function CharactersTab({ alts, onDeleteAlt, onOpenAddModal }) {
+export default function CharactersTab({ alts, onDeleteAlt, onOpenAddModal, isAdmin }) {
   const formatNumber = (num) => {
     return new Intl.NumberFormat('id-ID').format(num);
   };
@@ -10,9 +10,11 @@ export default function CharactersTab({ alts, onDeleteAlt, onOpenAddModal }) {
       <div className="glass-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem' }}>Daftar Karakter Tambahan (Alts)</h3>
-          <button className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={onOpenAddModal}>
-            + Tambah Karakter
-          </button>
+          {isAdmin && (
+            <button className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }} onClick={onOpenAddModal}>
+              + Tambah Karakter
+            </button>
+          )}
         </div>
         <div className="character-list-row">
           {alts.length === 0 ? (
@@ -38,13 +40,15 @@ export default function CharactersTab({ alts, onDeleteAlt, onOpenAddModal }) {
                     <div className="char-stat-val">{formatNumber(alt.power)}</div>
                     <div className="char-stat-lbl">CP</div>
                   </div>
-                  <button 
-                    className="btn-secondary" 
-                    style={{ padding: '0.35rem 0.65rem', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}
-                    onClick={() => onDeleteAlt(alt.id)}
-                  >
-                    Hapus
-                  </button>
+                  {isAdmin && (
+                    <button 
+                      className="btn-secondary" 
+                      style={{ padding: '0.35rem 0.65rem', borderColor: 'rgba(239, 68, 68, 0.2)', color: '#ef4444' }}
+                      onClick={() => onDeleteAlt(alt.id)}
+                    >
+                      Hapus
+                    </button>
+                  )}
                 </div>
               </div>
             ))

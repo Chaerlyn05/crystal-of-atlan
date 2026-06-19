@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,6 +11,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 const DB_PATH = path.join(__dirname, 'db.json');
+
+// Token admin yang aktif (in-memory, reset saat server restart)
+const ADMIN_SESSIONS = new Set();
+
+// Middleware: cek apakah request dari admin
+function requireAdmin(req, res, next) {
+  const token = req.headers['authorization']?.replace('Bearer ', '');
+  if (!token || !ADMIN_SESSIONS.has(token)) {
+    return res.status(401).json({ error: 'Unauthorized. Login sebagai admin terlebih dahulu.' });
+  }
+  next();
+}
 
 // Default state kalau db.json rusak atau hilang
 const DEFAULT_STATE = {
@@ -68,20 +81,40 @@ app.use(express.json());
 // Serve static frontend (hasil build) di production
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// GET /api/state — ambil semua data
+// POST /api/auth — login admin dengan PIN
+app.post('/api/auth', (req, res) => {
+  const { pin } = req.body;
+  const ADMIN_PIN = process.env.ADMIN_PIN || 'admin123';
+  if (!pin || pin !== ADMIN_PIN) {
+    return res.status(401).json({ error: 'PIN salah.' });
+  }
+  // Buat token unik untuk sesi ini
+  const token = crypto.randomBytes(32).toString('hex');
+  ADMIN_SESSIONS.add(token);
+  console.log('✅ Admin login berhasil.');
+  res.json({ success: true, token });
+});
+
+// POST /api/auth/logout — logout admin
+app.post('/api/auth/logout', (req, res) => {
+  const token = req.headers['authorization']?.replace('Bearer ', '');
+  if (token) ADMIN_SESSIONS.delete(token);
+  res.json({ success: true });
+});
+
+// GET /api/state — ambil semua data (publik, semua bisa lihat)
 app.get('/api/state', (req, res) => {
   const data = readDB();
   res.json(data);
 });
 
-// POST /api/state — simpan semua data
-app.post('/api/state', (req, res) => {
+// POST /api/state — simpan semua data (admin only)
+app.post('/api/state', requireAdmin, (req, res) => {
   try {
     const newState = req.body;
     if (!newState || !newState.mainCharacter) {
       return res.status(400).json({ error: 'Data tidak valid.' });
     }
-    // Pastikan avatar selalu pakai lokal
     newState.mainCharacter.avatar = '/avatar.png';
     writeDB(newState);
     res.json({ success: true });
@@ -91,8 +124,8 @@ app.post('/api/state', (req, res) => {
   }
 });
 
-// POST /api/reset — reset ke data default
-app.post('/api/reset', (req, res) => {
+// POST /api/reset — reset ke data default (admin only)
+app.post('/api/reset', requireAdmin, (req, res) => {
   writeDB(DEFAULT_STATE);
   res.json(DEFAULT_STATE);
 });

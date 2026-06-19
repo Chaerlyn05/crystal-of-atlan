@@ -5,6 +5,7 @@ import ProfileTab from './components/ProfileTab';
 import CharactersTab from './components/CharactersTab';
 import EditProfileModal from './components/EditProfileModal';
 import AddCharacterModal from './components/AddCharacterModal';
+import LoginModal from './components/LoginModal';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -54,6 +55,18 @@ function App() {
   const [isAddAltOpen, setIsAddAltOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('admin_token') || null);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  // Validasi token dari sessionStorage saat pertama load
+  useEffect(() => {
+    const savedToken = sessionStorage.getItem('admin_token');
+    if (savedToken) {
+      setAdminToken(savedToken);
+      setIsAdmin(true);
+    }
+  }, []);
 
   // Load data dari server saat pertama buka
   useEffect(() => {
@@ -90,9 +103,13 @@ function App() {
 
   // Simpan data ke server setiap kali state berubah
   const saveToServer = useCallback((newState) => {
+    const token = sessionStorage.getItem('admin_token');
     fetch(`${API_URL}/state`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      },
       body: JSON.stringify(newState)
     }).catch(() => {
       console.warn('Gagal menyimpan ke server.');
@@ -100,12 +117,40 @@ function App() {
   }, []);
 
   const handleResetData = () => {
+    if (!isAdmin) return;
     if (window.confirm("Apakah Anda yakin ingin mengatur ulang semua data ke bawaan?")) {
-      fetch(`${API_URL}/reset`, { method: 'POST' })
+      const token = sessionStorage.getItem('admin_token');
+      fetch(`${API_URL}/reset`, {
+        method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+      })
         .then(res => res.json())
         .then(data => setState(data))
         .catch(() => setState(DEFAULT_STATE));
     }
+  };
+
+  const handleToggleLock = () => {
+    if (isAdmin) {
+      // Logout
+      const token = sessionStorage.getItem('admin_token');
+      if (token) {
+        fetch(`${API_URL}/auth/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+        }).catch(() => {});
+      }
+      sessionStorage.removeItem('admin_token');
+      setAdminToken(null);
+      setIsAdmin(false);
+    } else {
+      setIsLoginOpen(true);
+    }
+  };
+
+  const handleLoginSuccess = (token) => {
+    setAdminToken(token);
+    setIsAdmin(true);
   };
 
   const handleSaveProfile = (updatedProfile) => {
@@ -237,6 +282,8 @@ function App() {
         setActiveTab={setActiveTab}
         name={state.mainCharacter.name}
         avatar={state.mainCharacter.avatar}
+        isAdmin={isAdmin}
+        onToggleLock={handleToggleLock}
       />
 
       <main className="main-wrapper" style={apiError ? { paddingTop: '3.5rem' } : {}}>
@@ -246,38 +293,49 @@ function App() {
             <p>{getSubheading()}</p>
           </div>
           <div className="header-actions">
-            <button className="btn-secondary" onClick={handleResetData}>Reset Data</button>
-            <button className="btn-primary" onClick={() => setIsEditOpen(true)}>
-              <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-              </svg>
-              Edit Profile
-            </button>
+            {isAdmin && (
+              <button className="btn-secondary" onClick={handleResetData}>Reset Data</button>
+            )}
+            {isAdmin && (
+              <button className="btn-primary" onClick={() => setIsEditOpen(true)}>
+                <svg style={{ width: '18px', height: '18px' }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Edit Profile
+              </button>
+            )}
           </div>
         </header>
 
         {activeTab === 'dashboard' && <DashboardTab mainCharacter={state.mainCharacter} />}
-        {activeTab === 'profile' && <ProfileTab mainCharacter={state.mainCharacter} onUpdateGear={handleUpdateGear} />}
+        {activeTab === 'profile' && <ProfileTab mainCharacter={state.mainCharacter} onUpdateGear={handleUpdateGear} isAdmin={isAdmin} />}
         {activeTab === 'characters' && (
           <CharactersTab
             alts={state.alts}
             onDeleteAlt={handleDeleteAlt}
             onOpenAddModal={() => setIsAddAltOpen(true)}
+            isAdmin={isAdmin}
           />
         )}
       </main>
 
       <EditProfileModal
-        isOpen={isEditOpen}
+        isOpen={isEditOpen && isAdmin}
         onClose={() => setIsEditOpen(false)}
         mainCharacter={state.mainCharacter}
         onSave={handleSaveProfile}
       />
 
       <AddCharacterModal
-        isOpen={isAddAltOpen}
+        isOpen={isAddAltOpen && isAdmin}
         onClose={() => setIsAddAltOpen(false)}
         onAdd={handleAddAlt}
+      />
+
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Sidebar({ activeTab, setActiveTab, name, avatar }) {
+export default function Sidebar({ activeTab, setActiveTab, name, avatar, isAdmin, onToggleLock }) {
   return (
     <aside className="sidebar">
       <div>
@@ -39,11 +39,40 @@ export default function Sidebar({ activeTab, setActiveTab, name, avatar }) {
       </div>
 
       <div className="sidebar-footer">
+        {/* Tombol Lock/Unlock Admin */}
+        <button
+          onClick={onToggleLock}
+          title={isAdmin ? 'Klik untuk Logout Admin' : 'Login sebagai Admin'}
+          style={{
+            width: '100%',
+            background: isAdmin
+              ? 'linear-gradient(135deg, rgba(167,139,250,0.15), rgba(236,72,153,0.15))'
+              : 'rgba(255,255,255,0.03)',
+            border: `1px solid ${isAdmin ? 'rgba(167,139,250,0.35)' : 'rgba(255,255,255,0.07)'}`,
+            borderRadius: '10px',
+            padding: '0.55rem 0.75rem',
+            color: isAdmin ? '#a78bfa' : 'rgba(255,255,255,0.3)',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.78rem',
+            marginBottom: '0.75rem',
+            transition: 'all 0.2s',
+          }}
+        >
+          <span style={{ fontSize: '14px' }}>{isAdmin ? '🔓' : '🔒'}</span>
+          <span>{isAdmin ? 'Admin Mode Aktif' : 'Login Admin'}</span>
+          {isAdmin && (
+            <span style={{ marginLeft: 'auto', fontSize: '0.7rem', opacity: 0.6 }}>Logout</span>
+          )}
+        </button>
+
         <div className="user-badge">
           <img src={avatar} alt="Avatar" className="user-avatar" />
           <div className="user-info">
             <div className="username">{name}</div>
-            <div className="user-title">Elite Explorer</div>
+            <div className="user-title">{isAdmin ? '👑 Owner' : 'Elite Explorer'}</div>
           </div>
         </div>
       </div>
