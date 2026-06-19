@@ -570,8 +570,9 @@ header {
 /* Equipment Layout (Profile Tab) */
 .profile-showcase-container {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
+  grid-template-columns: 320px 1.25fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 /* Game-style Equipment Grid */
@@ -1036,6 +1037,25 @@ header {
 }
 
 /* Media Queries for Responsiveness */
+@media (max-width: 1200px) {
+  .profile-showcase-container {
+    grid-template-columns: 300px 1fr;
+    gap: 1.5rem;
+  }
+  .profile-showcase-container > *:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .profile-showcase-container > *:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .profile-showcase-container > *:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
 @media (max-width: 1024px) {
   .sidebar {
     width: 80px;
@@ -1064,12 +1084,19 @@ header {
     width: calc(100% - 80px);
     padding: 1.5rem;
   }
-  .profile-showcase-container {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 768px) {
+  .profile-showcase-container {
+    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-showcase-container > * {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
   .col-4, .col-8, .col-6 {
     grid-column: span 12;
   }

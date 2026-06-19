@@ -2,7 +2,7 @@ import { useState } from 'react';
 import EditGearModal from './EditGearModal';
 
 export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
-  const { name, class: charClass, power, server, guild, bio, avatar, equipment } = mainCharacter;
+  const { name, class: charClass, power, server, guild, bio, avatar, equipment, combatStats } = mainCharacter;
   const [selectedGear, setSelectedGear] = useState(null);
   const [isEditGearOpen, setIsEditGearOpen] = useState(false);
 
@@ -118,6 +118,45 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Right Stats Panel */}
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', marginBottom: '0.5rem' }}>Statistik Tempur</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+            {combatStats && combatStats.map((stat, index) => {
+              const icons = {
+                "ATK": "⚔️",
+                "CRIT": "🎯",
+                "CRIT DMG": "💥",
+                "SPEED": "⚡",
+                "DEF": "🛡️",
+                "ELEM DMG": "❄️"
+              };
+              return (
+                <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
+                    <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span style={{ opacity: 0.85 }}>{icons[stat.name] || "📊"}</span>
+                      <span>{stat.name}</span>
+                    </span>
+                    <span style={{ fontWeight: 700, color: 'var(--accent-gold)' }}>{stat.raw}</span>
+                  </div>
+                  {/* Progress bar background */}
+                  <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                    {/* Progress bar fill */}
+                    <div style={{
+                      width: `${stat.value}%`,
+                      height: '100%',
+                      background: 'var(--gradient-neon)',
+                      borderRadius: '3px',
+                      boxShadow: '0 0 8px rgba(255, 86, 155, 0.45)'
+                    }}></div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
