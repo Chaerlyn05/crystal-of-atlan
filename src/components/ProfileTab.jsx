@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import EditGearModal from './EditGearModal';
 
 export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
@@ -73,39 +73,50 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
             )}
           </div>
 
-          {/* Game-style 2+gap+2 grid per baris */}
+          {/* Game-style 5-column grid flanking character */}
           <div className="equipment-grid-game">
-            {equipment.map((gear, index) => (
-              <React.Fragment key={gear.id}>
-                <div
-                  className={`gear-card rarity-${gear.rarity}${isAdmin ? ' admin-mode' : ''}`}
-                  onClick={() => handleGearClick(gear)}
-                  title={isAdmin ? `Edit ${gear.type}` : gear.name}
-                >
-                  {/* Enhancement badge */}
-                  <div className="gear-enhancement-badge">{gear.level}</div>
+            {/* Center Character Portrait spanning 3 rows */}
+            <div className="gear-char-card">
+              <div className="gear-char-glow" />
+              <div className="gear-char-avatar-wrapper">
+                <img src={avatar} alt={name} className="gear-char-avatar" />
+              </div>
+              <div className="gear-char-details">
+                <div className="gear-char-name">{name}</div>
+                <div className="gear-char-class">{charClass}</div>
+                <div className="gear-char-power">⚔️ {formatNumber(power)} CP</div>
+              </div>
+            </div>
 
-                  {/* Image or emoji icon */}
-                  {gear.image ? (
-                    <img src={gear.image} alt={gear.name} className="gear-card-image" />
-                  ) : (
-                    <div className="gear-card-icon">{gear.icon}</div>
-                  )}
+            {/* 12 Equipment slots */}
+            {equipment.map((gear) => (
+              <div
+                key={gear.id}
+                className={`gear-card rarity-${gear.rarity}${isAdmin ? ' admin-mode' : ''}`}
+                onClick={() => handleGearClick(gear)}
+                title={isAdmin ? `Edit ${gear.type}` : gear.name}
+              >
+                {/* Enhancement badge */}
+                <div className="gear-enhancement-badge">{gear.level}</div>
 
-                  {/* Type label at bottom */}
-                  <div className="gear-type-label">{gear.type}</div>
+                {/* Image or emoji icon */}
+                {gear.image ? (
+                  <img src={gear.image} alt={gear.name} className="gear-card-image" />
+                ) : (
+                  <div className="gear-card-icon">{gear.icon}</div>
+                )}
 
-                  {/* Admin edit overlay on hover */}
-                  {isAdmin && (
-                    <div className="gear-edit-overlay">
-                      ✏️
-                      <span>Edit</span>
-                    </div>
-                  )}
-                </div>
-                {/* Spacer SETELAH item ke-2, 6, 10 (posisi 1, 5, 9) → kolom tengah */}
-                {index % 4 === 1 && <div className="gear-spacer" />}
-              </React.Fragment>
+                {/* Type label at bottom */}
+                <div className="gear-type-label">{gear.type}</div>
+
+                {/* Admin edit overlay on hover */}
+                {isAdmin && (
+                  <div className="gear-edit-overlay">
+                    ✏️
+                    <span>Edit</span>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         </div>
