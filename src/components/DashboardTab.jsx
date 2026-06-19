@@ -30,7 +30,7 @@ export default function DashboardTab({ mainCharacter }) {
             <div className="material-icon">💎</div>
             <div className="material-info">
               <span className="material-value">{formatNumber(currencies.crystals)}</span>
-              <span className="material-name">Crystals</span>
+              <span className="material-name">Opal</span>
             </div>
           </div>
           <div className="material-card">
@@ -44,7 +44,7 @@ export default function DashboardTab({ mainCharacter }) {
             <div className="material-icon">🎫</div>
             <div className="material-info">
               <span className="material-value">{currencies.abyss}</span>
-              <span className="material-name">Abyss Tickets</span>
+              <span className="material-name">Total Cumulative</span>
             </div>
           </div>
         </div>

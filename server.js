@@ -35,7 +35,7 @@ const DEFAULT_STATE = {
     guild: "AtlanElite",
     bio: "Petualang legendaris yang berspesialisasi dalam elemen es dan manipulasi gravitasi di dunia Atlan.",
     avatar: "/avatar.png",
-    currencies: { gold: 4850000, crystals: 12450, energy: "120 / 150", abyss: 35 },
+    currencies: { gold: 4850000, crystals: 12450, energy: "140/140", abyss: 35 },
     combatStats: [
       { name: "ATK", value: 92, raw: "12,450" },
       { name: "CRIT", value: 85, raw: "68.5%" },
