@@ -111,12 +111,14 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
         </div>
       </div>
 
-      <EditGearModal
-        isOpen={isEditGearOpen && isAdmin}
-        onClose={() => setIsEditGearOpen(false)}
-        gear={selectedGear}
-        onSave={handleSaveGear}
-      />
+      {isEditGearOpen && isAdmin && selectedGear && (
+        <EditGearModal
+          isOpen={isEditGearOpen && isAdmin}
+          onClose={() => setIsEditGearOpen(false)}
+          gear={selectedGear}
+          onSave={handleSaveGear}
+        />
+      )}
     </div>
   );
 }

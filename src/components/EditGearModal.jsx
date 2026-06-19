@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Kompres dan resize gambar ke max 300px agar db.json tidak terlalu besar
 function compressImage(file, maxSize = 300, quality = 0.82) {
@@ -20,20 +20,24 @@ function compressImage(file, maxSize = 300, quality = 0.82) {
 }
 
 export default function EditGearModal({ isOpen, onClose, gear, onSave }) {
-  const [formData, setFormData] = useState({ name: '', enhancement: '0', image: '' });
+  const [formData, setFormData] = useState(() => {
+    const raw = gear?.level || '+0';
+    return {
+      name: gear?.name || '',
+      enhancement: raw.replace('+', ''),
+      image: gear?.image || ''
+    };
+  });
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    if (gear) {
-      const raw = gear.level || '+0';
-      setFormData({
-        name: gear.name || '',
-        enhancement: raw.replace('+', ''),
-        image: gear.image || ''
-      });
-    }
-  }, [gear, isOpen]);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];

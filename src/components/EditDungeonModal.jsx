@@ -1,25 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function EditDungeonModal({ isOpen, onClose, dungeon, onSave }) {
-  const [formData, setFormData] = useState({
-    id: null,
-    name: '',
-    cp: 0,
-    status: 'IN PROGRESS',
-    icon: '🔥'
-  });
+  const [formData, setFormData] = useState(() => ({
+    id: dungeon?.id || null,
+    name: dungeon?.name || '',
+    cp: dungeon?.cp || 0,
+    status: dungeon?.status || 'IN PROGRESS',
+    icon: dungeon?.icon || '🔥'
+  }));
 
   useEffect(() => {
-    if (dungeon) {
-      setFormData({
-        id: dungeon.id,
-        name: dungeon.name,
-        cp: dungeon.cp || 0,
-        status: dungeon.status || 'IN PROGRESS',
-        icon: dungeon.icon || '🔥'
-      });
-    }
-  }, [dungeon, isOpen]);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;

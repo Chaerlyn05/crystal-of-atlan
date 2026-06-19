@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function Sidebar({ activeTab, setActiveTab, name, avatar, isAdmin, onToggleLock }) {
   return (

@@ -1,35 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function EditProfileModal({ isOpen, onClose, mainCharacter, onSave }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    class: '',
-    power: 0,
-    level: 1,
-    server: '',
-    guild: '',
-    gold: 0,
-    crystals: 0,
-    abyss: 0,
-    bio: ''
-  });
+  const [formData, setFormData] = useState(() => ({
+    name: mainCharacter?.name || '',
+    class: mainCharacter?.class || '',
+    power: mainCharacter?.power || 0,
+    level: mainCharacter?.level || 1,
+    server: mainCharacter?.server || '',
+    guild: mainCharacter?.guild || '',
+    gold: mainCharacter?.currencies?.gold || 0,
+    crystals: mainCharacter?.currencies?.crystals || 0,
+    abyss: mainCharacter?.currencies?.abyss || 0,
+    bio: mainCharacter?.bio || ''
+  }));
 
   useEffect(() => {
-    if (mainCharacter) {
-      setFormData({
-        name: mainCharacter.name,
-        class: mainCharacter.class,
-        power: mainCharacter.power,
-        level: mainCharacter.level,
-        server: mainCharacter.server,
-        guild: mainCharacter.guild,
-        gold: mainCharacter.currencies.gold,
-        crystals: mainCharacter.currencies.crystals,
-        abyss: mainCharacter.currencies.abyss,
-        bio: mainCharacter.bio
-      });
-    }
-  }, [mainCharacter, isOpen]);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;

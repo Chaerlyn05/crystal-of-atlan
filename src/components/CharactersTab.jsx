@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function CharactersTab({ alts, onDeleteAlt, onOpenAddModal, isAdmin }) {
   const formatNumber = (num) => {

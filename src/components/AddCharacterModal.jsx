@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AddCharacterModal({ isOpen, onClose, onAdd }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     name: '',
     class: 'Spellweaver',
     level: 1,
     power: 5000
-  });
+  }));
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -20,6 +28,7 @@ export default function AddCharacterModal({ isOpen, onClose, onAdd }) {
     e.preventDefault();
     onAdd(formData);
     setFormData({ name: '', class: 'Spellweaver', level: 1, power: 5000 });
+
     onClose();
   };
 
@@ -88,8 +97,9 @@ export default function AddCharacterModal({ isOpen, onClose, onAdd }) {
           </div>
           <div className="form-actions">
             <button type="button" className="btn-secondary" onClick={onClose}>Batal</button>
-            <button type="submit" class="btn-primary">Tambah</button>
+            <button type="submit" className="btn-primary">Tambah</button>
           </div>
+
         </form>
       </div>
     </div>

@@ -66,20 +66,10 @@ function App() {
   const [isAddAltOpen, setIsAddAltOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('admin_token') || null);
+  const [isAdmin, setIsAdmin] = useState(() => !!sessionStorage.getItem('admin_token'));
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isEditDungeonOpen, setIsEditDungeonOpen] = useState(false);
   const [selectedDungeon, setSelectedDungeon] = useState(null);
-
-  // Validasi token dari sessionStorage saat pertama load
-  useEffect(() => {
-    const savedToken = sessionStorage.getItem('admin_token');
-    if (savedToken) {
-      setAdminToken(savedToken);
-      setIsAdmin(true);
-    }
-  }, []);
 
   // Load data dari server saat pertama buka
   useEffect(() => {
@@ -154,15 +144,13 @@ function App() {
         }).catch(() => {});
       }
       sessionStorage.removeItem('admin_token');
-      setAdminToken(null);
       setIsAdmin(false);
     } else {
       setIsLoginOpen(true);
     }
   };
 
-  const handleLoginSuccess = (token) => {
-    setAdminToken(token);
+  const handleLoginSuccess = () => {
     setIsAdmin(true);
   };
 
@@ -362,18 +350,22 @@ function App() {
         )}
       </main>
 
-      <EditProfileModal
-        isOpen={isEditOpen && isAdmin}
-        onClose={() => setIsEditOpen(false)}
-        mainCharacter={state.mainCharacter}
-        onSave={handleSaveProfile}
-      />
+      {isEditOpen && isAdmin && (
+        <EditProfileModal
+          isOpen={isEditOpen && isAdmin}
+          onClose={() => setIsEditOpen(false)}
+          mainCharacter={state.mainCharacter}
+          onSave={handleSaveProfile}
+        />
+      )}
 
-      <AddCharacterModal
-        isOpen={isAddAltOpen && isAdmin}
-        onClose={() => setIsAddAltOpen(false)}
-        onAdd={handleAddAlt}
-      />
+      {isAddAltOpen && isAdmin && (
+        <AddCharacterModal
+          isOpen={isAddAltOpen && isAdmin}
+          onClose={() => setIsAddAltOpen(false)}
+          onAdd={handleAddAlt}
+        />
+      )}
 
       <LoginModal
         isOpen={isLoginOpen}
@@ -381,12 +373,14 @@ function App() {
         onLoginSuccess={handleLoginSuccess}
       />
 
-      <EditDungeonModal
-        isOpen={isEditDungeonOpen && isAdmin}
-        onClose={() => setIsEditDungeonOpen(false)}
-        dungeon={selectedDungeon}
-        onSave={handleSaveDungeon}
-      />
+      {isEditDungeonOpen && isAdmin && selectedDungeon && (
+        <EditDungeonModal
+          isOpen={isEditDungeonOpen && isAdmin}
+          onClose={() => setIsEditDungeonOpen(false)}
+          dungeon={selectedDungeon}
+          onSave={handleSaveDungeon}
+        />
+      )}
     </div>
   );
 }
