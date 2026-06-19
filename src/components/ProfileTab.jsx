@@ -73,38 +73,39 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
             )}
           </div>
 
-          {/* Game-style 2-column square grid */}
+          {/* Game-style 2+gap+2 grid per baris */}
           <div className="equipment-grid-game">
-            {equipment.map(gear => (
-              <div
-                key={gear.id}
-                className={`gear-card rarity-${gear.rarity}${isAdmin ? ' admin-mode' : ''}`}
-                onClick={() => handleGearClick(gear)}
-                title={isAdmin ? `Edit ${gear.type}` : gear.name}
-              >
-                {/* Enhancement badge */}
-                <div className="gear-enhancement-badge">{gear.level}</div>
+            {equipment.map((gear, index) => (
+              <React.Fragment key={gear.id}>
+                <div
+                  className={`gear-card rarity-${gear.rarity}${isAdmin ? ' admin-mode' : ''}`}
+                  onClick={() => handleGearClick(gear)}
+                  title={isAdmin ? `Edit ${gear.type}` : gear.name}
+                >
+                  {/* Enhancement badge */}
+                  <div className="gear-enhancement-badge">{gear.level}</div>
 
-                {/* Image or emoji icon */}
-                {gear.image ? (
-                  <img src={gear.image} alt={gear.name} className="gear-card-image" />
-                ) : (
-                  <div className="gear-card-icon">{gear.icon}</div>
-                )}
+                  {/* Image or emoji icon */}
+                  {gear.image ? (
+                    <img src={gear.image} alt={gear.name} className="gear-card-image" />
+                  ) : (
+                    <div className="gear-card-icon">{gear.icon}</div>
+                  )}
 
-                {/* Type + name label at bottom */}
-                <div className="gear-type-label">
-                  {gear.type}
+                  {/* Type label at bottom */}
+                  <div className="gear-type-label">{gear.type}</div>
+
+                  {/* Admin edit overlay on hover */}
+                  {isAdmin && (
+                    <div className="gear-edit-overlay">
+                      ✏️
+                      <span>Edit</span>
+                    </div>
+                  )}
                 </div>
-
-                {/* Admin edit overlay on hover */}
-                {isAdmin && (
-                  <div className="gear-edit-overlay">
-                    ✏️
-                    <span>Edit</span>
-                  </div>
-                )}
-              </div>
+                {/* Spacer SETELAH item ke-2, 6, 10 (posisi 1, 5, 9) → kolom tengah */}
+                {index % 4 === 1 && <div className="gear-spacer" />}
+              </React.Fragment>
             ))}
           </div>
         </div>

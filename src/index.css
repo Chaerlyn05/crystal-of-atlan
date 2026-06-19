@@ -576,9 +576,14 @@ header {
 /* Game-style Equipment Grid */
 .equipment-grid-game {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr 0.45fr 1fr 1fr;
   gap: 0.4rem;
   max-width: 360px;
+}
+
+/* Spacer cell untuk pemisah tengah */
+.gear-spacer {
+  /* kosong, hanya mengisi kolom pemisah */
 }
 
 .gear-card {
