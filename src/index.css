@@ -676,6 +676,12 @@ header {
   box-shadow: 0 0 10px rgba(124, 58, 237, 0.25), inset 0 0 20px rgba(124, 58, 237, 0.04);
 }
 
+.gear-card.rarity-epic {
+  background: linear-gradient(145deg, #0f0a1e, #1a1035);
+  border-color: #5b21b6;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.25), inset 0 0 20px rgba(124, 58, 237, 0.04);
+}
+
 .gear-card.rarity-legendary {
   background: linear-gradient(145deg, #1a0a00, #2a1200);
   border-color: #f97316;
@@ -732,6 +738,8 @@ header {
   align-items: center;
   justify-content: center;
   font-size: 1.8rem;
+  background: transparent;
+  font-variant-emoji: text;
 }
 
 /* Type label at bottom */

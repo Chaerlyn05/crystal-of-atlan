@@ -37,15 +37,15 @@ const DEFAULT_STATE = {
     equipment: [
       { id: "weapon",   name: "Glacial Void Scepter",   type: "Weapon",   level: "+15", rarity: "epic",      icon: "🪄", image: "" },
       { id: "helmet",   name: "Void Weaver Hood",       type: "Helmet",   level: "+12", rarity: "epic",      icon: "🪖", image: "" },
-      { id: "armor",    name: "Void Weaver Robe",       type: "Armor",    level: "+12", rarity: "epic",      icon: "🥋", image: "" },
-      { id: "glove",    name: "Void Weaver Gloves",     type: "Glove",    level: "+10", rarity: "epic",      icon: "🧤", image: "" },
+      { id: "bracers",  name: "Ethereal Bracers",        type: "Bracers",  level: "+8",  rarity: "legendary", icon: "⛓️", image: "" },
+      { id: "ring",     name: "Crimson Crystal Ring",   type: "Ring",     level: "+10", rarity: "legendary", icon: "💍", image: "" },
       { id: "pants",    name: "Void Weaver Legguards",  type: "Pants",    level: "+10", rarity: "epic",      icon: "👖", image: "" },
       { id: "shoes",    name: "Void Weaver Greaves",    type: "Shoes",    level: "+10", rarity: "epic",      icon: "👟", image: "" },
       { id: "talisman", name: "Void Crystal Talisman",  type: "Talisman", level: "+8",  rarity: "legendary", icon: "🔮", image: "" },
       { id: "necklace", name: "Crystal Heart Amulet",   type: "Necklace", level: "+12", rarity: "legendary", icon: "📿", image: "" },
-      { id: "bracers",  name: "Ethereal Bracers",        type: "Bracers",  level: "+8",  rarity: "epic",      icon: "⛓️", image: "" },
-      { id: "ring",     name: "Crimson Crystal Ring",   type: "Ring",     level: "+10", rarity: "legendary", icon: "💍", image: "" },
-      { id: "seal",     name: "Arcane Void Seal",        type: "Seal",     level: "+8",  rarity: "epic",      icon: "🔱", image: "" },
+      { id: "armor",    name: "Void Weaver Robe",       type: "Armor",    level: "+12", rarity: "epic",      icon: "🥋", image: "" },
+      { id: "glove",    name: "Void Weaver Gloves",     type: "Glove",    level: "+10", rarity: "epic",      icon: "🧤", image: "" },
+      { id: "seal",     name: "Arcane Void Seal",        type: "Seal",     level: "+8",  rarity: "legendary", icon: "🔱", image: "" },
       { id: "relic",    name: "Ancient Atlan Relic",     type: "Relic",    level: "+6",  rarity: "legendary", icon: "⚗️", image: "" }
     ]
   },
