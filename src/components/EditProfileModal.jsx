@@ -10,6 +10,7 @@ export default function EditProfileModal({ isOpen, onClose, mainCharacter, onSav
     guild: '',
     gold: 0,
     crystals: 0,
+    abyss: 0,
     bio: ''
   });
 
@@ -24,6 +25,7 @@ export default function EditProfileModal({ isOpen, onClose, mainCharacter, onSav
         guild: mainCharacter.guild,
         gold: mainCharacter.currencies.gold,
         crystals: mainCharacter.currencies.crystals,
+        abyss: mainCharacter.currencies.abyss,
         bio: mainCharacter.bio
       });
     }
@@ -33,7 +35,7 @@ export default function EditProfileModal({ isOpen, onClose, mainCharacter, onSav
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [id]: id === 'power' || id === 'level' || id === 'gold' || id === 'crystals' ? parseInt(value, 10) || 0 : value
+      [id]: id === 'power' || id === 'level' || id === 'gold' || id === 'crystals' || id === 'abyss' ? parseInt(value, 10) || 0 : value
     }));
   };
 
@@ -82,8 +84,12 @@ export default function EditProfileModal({ isOpen, onClose, mainCharacter, onSav
             <input type="number" id="gold" className="form-input" value={formData.gold} onChange={handleChange} />
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="crystals">Mata Uang Crystals</label>
+            <label className="form-label" htmlFor="crystals">Mata Uang Opal</label>
             <input type="number" id="crystals" className="form-input" value={formData.crystals} onChange={handleChange} />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="abyss">Total Cumulative</label>
+            <input type="number" id="abyss" className="form-input" value={formData.abyss} onChange={handleChange} min="0" />
           </div>
           <div className="form-group">
             <label className="form-label" htmlFor="bio">Deskripsi / Bio Karakter</label>

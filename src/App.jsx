@@ -169,7 +169,8 @@ function App() {
           currencies: {
             ...prev.mainCharacter.currencies,
             gold: updatedProfile.gold,
-            crystals: updatedProfile.crystals
+            crystals: updatedProfile.crystals,
+            abyss: updatedProfile.abyss
           }
         }
       };
