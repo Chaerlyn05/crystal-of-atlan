@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EditGearModal from './EditGearModal';
 
 export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
   const { name, class: charClass, power, server, guild, bio, avatar, equipment } = mainCharacter;
+  const [selectedGear, setSelectedGear] = useState(null);
+  const [isEditGearOpen, setIsEditGearOpen] = useState(false);
 
-  const handleGearClick = (gearId, currentName, gearType) => {
+  const handleGearClick = (gear) => {
     if (!isAdmin) return;
-    const newName = prompt(`Ubah nama untuk ${gearType}:`, currentName);
-    if (newName !== null && newName.trim() !== "") {
-      onUpdateGear(gearId, newName.trim());
-    }
+    setSelectedGear(gear);
+    setIsEditGearOpen(true);
+  };
+
+  const handleSaveGear = (gearId, updates) => {
+    onUpdateGear(gearId, updates);
   };
 
   const formatNumber = (num) => {
@@ -45,35 +50,64 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Guild</span> <span>{guild || "Tidak ada Guild"}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Sub-Class</span> <span>Glacial Void</span>
-              </div>
             </div>
           </div>
         </div>
 
         {/* Right Equipment Slots Grid */}
         <div className="glass-card">
-          <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', marginBottom: '1.5rem' }}>Peralatan Karakter (Equipment)</h3>
-          <div className="equipment-grid">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem' }}>Peralatan Karakter (Equipment)</h3>
+            {isAdmin && (
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', background: 'rgba(255,86,155,0.1)', border: '1px solid rgba(255,86,155,0.2)', borderRadius: '6px', padding: '0.2rem 0.6rem' }}>
+                ✏️ Klik gear untuk edit
+              </span>
+            )}
+          </div>
+          <div className="equipment-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
             {equipment.map(gear => (
-              <div 
-                key={gear.id} 
+              <div
+                key={gear.id}
                 className={`gear-slot rarity-${gear.rarity}`}
-                onClick={() => handleGearClick(gear.id, gear.name, gear.type)}
-                style={{ cursor: isAdmin ? 'pointer' : 'default' }}
-                title={isAdmin ? 'Klik untuk edit nama gear' : ''}
+                onClick={() => handleGearClick(gear)}
+                style={{
+                  cursor: isAdmin ? 'pointer' : 'default',
+                  padding: '0.75rem',
+                  gap: '0.65rem',
+                  position: 'relative'
+                }}
+                title={isAdmin ? `Klik untuk edit ${gear.type}` : ''}
               >
-                <div className="gear-icon-box">{gear.icon}</div>
-                <div className="gear-details">
-                  <div className="gear-name">{gear.name}</div>
-                  <div className="gear-type">{gear.type} <span className="gear-level">{gear.level}</span></div>
+                <div className="gear-icon-box" style={{ width: '40px', height: '40px', fontSize: '1.2rem', flexShrink: 0 }}>
+                  {gear.icon}
                 </div>
+                <div className="gear-details" style={{ overflow: 'hidden', minWidth: 0 }}>
+                  <div className="gear-name" style={{ fontSize: '0.8rem' }}>{gear.name}</div>
+                  <div className="gear-type" style={{ fontSize: '0.7rem' }}>
+                    {gear.type} <span className="gear-level">{gear.level}</span>
+                  </div>
+                </div>
+                {isAdmin && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '0.4rem',
+                    right: '0.4rem',
+                    fontSize: '0.65rem',
+                    opacity: 0.4
+                  }}>✏️</span>
+                )}
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <EditGearModal
+        isOpen={isEditGearOpen && isAdmin}
+        onClose={() => setIsEditGearOpen(false)}
+        gear={selectedGear}
+        onSave={handleSaveGear}
+      />
     </div>
   );
 }
