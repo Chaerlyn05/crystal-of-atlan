@@ -23,11 +23,12 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
   return (
     <div className="page-content active">
       <div className="profile-showcase-container">
+
         {/* Left Character Summary Card */}
         <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1.5rem' }}>
           <div className="hero-avatar-container" style={{ marginTop: '1rem' }}>
             <div className="hero-avatar-glow"></div>
-            <div className="hero-avatar-wrapper" style={{ width: '180px', height: '180px' }}>
+            <div className="hero-avatar-wrapper" style={{ width: '160px', height: '160px' }}>
               <img src={avatar} alt="Character" className="hero-avatar" />
             </div>
           </div>
@@ -54,47 +55,54 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
           </div>
         </div>
 
-        {/* Right Equipment Slots Grid */}
+        {/* Right Equipment Panel */}
         <div className="glass-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem' }}>Peralatan Karakter (Equipment)</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem' }}>Peralatan Karakter</h3>
             {isAdmin && (
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)', background: 'rgba(255,86,155,0.1)', border: '1px solid rgba(255,86,155,0.2)', borderRadius: '6px', padding: '0.2rem 0.6rem' }}>
-                ✏️ Klik gear untuk edit
+              <span style={{
+                fontSize: '0.7rem',
+                color: 'var(--primary-cyan)',
+                background: 'rgba(255,86,155,0.08)',
+                border: '1px solid rgba(255,86,155,0.2)',
+                borderRadius: '6px',
+                padding: '0.2rem 0.6rem'
+              }}>
+                ✏️ Hover &amp; klik untuk edit
               </span>
             )}
           </div>
-          <div className="equipment-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
+
+          {/* Game-style 2-column square grid */}
+          <div className="equipment-grid-game">
             {equipment.map(gear => (
               <div
                 key={gear.id}
-                className={`gear-slot rarity-${gear.rarity}`}
+                className={`gear-card rarity-${gear.rarity}${isAdmin ? ' admin-mode' : ''}`}
                 onClick={() => handleGearClick(gear)}
-                style={{
-                  cursor: isAdmin ? 'pointer' : 'default',
-                  padding: '0.75rem',
-                  gap: '0.65rem',
-                  position: 'relative'
-                }}
-                title={isAdmin ? `Klik untuk edit ${gear.type}` : ''}
+                title={isAdmin ? `Edit ${gear.type}` : gear.name}
               >
-                <div className="gear-icon-box" style={{ width: '40px', height: '40px', fontSize: '1.2rem', flexShrink: 0 }}>
-                  {gear.icon}
+                {/* Enhancement badge */}
+                <div className="gear-enhancement-badge">{gear.level}</div>
+
+                {/* Image or emoji icon */}
+                {gear.image ? (
+                  <img src={gear.image} alt={gear.name} className="gear-card-image" />
+                ) : (
+                  <div className="gear-card-icon">{gear.icon}</div>
+                )}
+
+                {/* Type + name label at bottom */}
+                <div className="gear-type-label">
+                  {gear.type}
                 </div>
-                <div className="gear-details" style={{ overflow: 'hidden', minWidth: 0 }}>
-                  <div className="gear-name" style={{ fontSize: '0.8rem' }}>{gear.name}</div>
-                  <div className="gear-type" style={{ fontSize: '0.7rem' }}>
-                    {gear.type} <span className="gear-level">{gear.level}</span>
-                  </div>
-                </div>
+
+                {/* Admin edit overlay on hover */}
                 {isAdmin && (
-                  <span style={{
-                    position: 'absolute',
-                    top: '0.4rem',
-                    right: '0.4rem',
-                    fontSize: '0.65rem',
-                    opacity: 0.4
-                  }}>✏️</span>
+                  <div className="gear-edit-overlay">
+                    ✏️
+                    <span>Edit</span>
+                  </div>
                 )}
               </div>
             ))}
