@@ -39,6 +39,14 @@ export default function Sidebar({ activeTab, setActiveTab, name, avatar, isAdmin
       </div>
 
       <div className="sidebar-footer">
+        <div className="user-badge">
+          <img src={avatar} alt="Avatar" className="user-avatar" />
+          <div className="user-info">
+            <div className="username">{name}</div>
+            <div className="user-title">{isAdmin ? '👑 Owner' : 'Elite Explorer'}</div>
+          </div>
+        </div>
+
         {/* Tombol Lock/Unlock Admin */}
         <button
           onClick={onToggleLock}
@@ -50,31 +58,23 @@ export default function Sidebar({ activeTab, setActiveTab, name, avatar, isAdmin
               : 'rgba(255,255,255,0.03)',
             border: `1px solid ${isAdmin ? 'rgba(167,139,250,0.35)' : 'rgba(255,255,255,0.07)'}`,
             borderRadius: '10px',
-            padding: '0.55rem 0.75rem',
-            color: isAdmin ? '#a78bfa' : 'rgba(255,255,255,0.3)',
+            padding: '0.5rem 0.75rem',
+            color: isAdmin ? '#a78bfa' : 'rgba(255,255,255,0.25)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
             fontSize: '0.78rem',
-            marginBottom: '0.75rem',
+            marginTop: '0.65rem',
             transition: 'all 0.2s',
           }}
         >
-          <span style={{ fontSize: '14px' }}>{isAdmin ? '🔓' : '🔒'}</span>
+          <span style={{ fontSize: '13px' }}>{isAdmin ? '🔓' : '🔒'}</span>
           <span>{isAdmin ? 'Admin Mode Aktif' : 'Login Admin'}</span>
           {isAdmin && (
             <span style={{ marginLeft: 'auto', fontSize: '0.7rem', opacity: 0.6 }}>Logout</span>
           )}
         </button>
-
-        <div className="user-badge">
-          <img src={avatar} alt="Avatar" className="user-avatar" />
-          <div className="user-info">
-            <div className="username">{name}</div>
-            <div className="user-title">{isAdmin ? '👑 Owner' : 'Elite Explorer'}</div>
-          </div>
-        </div>
       </div>
     </aside>
   );
