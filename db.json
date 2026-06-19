@@ -1,0 +1,38 @@
+{
+  "mainCharacter": {
+    "name": "Aethelgard",
+    "class": "Spellweaver",
+    "power": 42850,
+    "level": 60,
+    "server": "S1 - Crystal Coast",
+    "guild": "AtlanElite",
+    "bio": "Petualang legendaris yang berspesialisasi dalam elemen es dan manipulasi gravitasi di dunia Atlan.",
+    "avatar": "/avatar.png",
+    "currencies": {
+      "gold": 4850000,
+      "crystals": 12450,
+      "energy": "120 / 150",
+      "abyss": 35
+    },
+    "combatStats": [
+      { "name": "ATK", "value": 92, "raw": "12,450" },
+      { "name": "CRIT", "value": 85, "raw": "68.5%" },
+      { "name": "CRIT DMG", "value": 78, "raw": "210%" },
+      { "name": "SPEED", "value": 70, "raw": "115%" },
+      { "name": "DEF", "value": 55, "raw": "3,890" },
+      { "name": "ELEM DMG", "value": 90, "raw": "+88%" }
+    ],
+    "equipment": [
+      { "id": "weapon", "name": "Glacial Void Scepter", "type": "Weapon", "level": "+15", "rarity": "epic", "icon": "🪄" },
+      { "id": "helmet", "name": "Void Weaver Hood", "type": "Helmet", "level": "+12", "rarity": "epic", "icon": "🦹" },
+      { "id": "armor", "name": "Void Weaver Robe", "type": "Armor", "level": "+12", "rarity": "epic", "icon": "🥋" },
+      { "id": "boots", "name": "Void Weaver Greaves", "type": "Boots", "level": "+10", "rarity": "epic", "icon": "🥾" },
+      { "id": "ring", "name": "Crimson Crystal Ring", "type": "Ring", "level": "+10", "rarity": "legendary", "icon": "💍" },
+      { "id": "necklace", "name": "Crystal Heart Amulet", "type": "Necklace", "level": "+12", "rarity": "legendary", "icon": "📿" }
+    ]
+  },
+  "alts": [
+    { "id": 1, "name": "Valkyria", "class": "Gunslinger", "level": 55, "power": 36200, "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" },
+    { "id": 2, "name": "Zweihander", "class": "Guardian", "level": 42, "power": 24100, "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" }
+  ]
+}
