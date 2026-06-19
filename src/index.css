@@ -584,7 +584,8 @@ header {
 
 /* Spacer cell untuk pemisah tengah */
 .gear-spacer {
-  /* kosong, hanya mengisi kolom pemisah */
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .gear-card {
