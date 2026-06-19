@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditGearModal from './EditGearModal';
 
 export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
   const { name, class: charClass, power, server, guild, bio, avatar, equipment, combatStats } = mainCharacter;
   const [selectedGear, setSelectedGear] = useState(null);
   const [isEditGearOpen, setIsEditGearOpen] = useState(false);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimate(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleGearClick = (gear) => {
     if (!isAdmin) return;
@@ -147,11 +153,12 @@ export default function ProfileTab({ mainCharacter, onUpdateGear, isAdmin }) {
                   <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
                     {/* Progress bar fill */}
                     <div style={{
-                      width: `${stat.value}%`,
+                      width: animate ? `${stat.value}%` : '0%',
                       height: '100%',
                       background: 'var(--gradient-neon)',
                       borderRadius: '3px',
-                      boxShadow: '0 0 8px rgba(255, 86, 155, 0.45)'
+                      boxShadow: '0 0 8px rgba(255, 86, 155, 0.45)',
+                      transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
                     }}></div>
                   </div>
                 </div>
