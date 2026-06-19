@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function DashboardTab({ mainCharacter }) {
+export default function DashboardTab({ mainCharacter, dungeons = [], isAdmin, onEditDungeon }) {
   const { name, class: charClass, power, level, server, guild, bio, avatar, currencies, combatStats } = mainCharacter;
   const [animate, setAnimate] = useState(false);
 
@@ -116,26 +116,74 @@ export default function DashboardTab({ mainCharacter }) {
         <div className="col-6 glass-card">
           <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.15rem', marginBottom: '1.25rem' }}>Petualangan Harian & Abyss</h3>
           <div className="character-list-row">
-            <div className="character-item">
-              <div className="char-main-info">
-                <div className="material-icon" style={{ background: 'rgba(255, 86, 155, 0.12)', borderRadius: '8px', width: '36px', height: '36px', fontSize: '1.1rem' }}>🔥</div>
-                <div>
-                  <div className="char-name">Abyss Vault - Tower of Ruin</div>
-                  <div className="char-class">Rekomendasi CP: 38,000</div>
+            {dungeons.map((dungeon) => {
+              let statusStyle = {
+                color: 'var(--text-dim)',
+                background: 'rgba(255,255,255,0.06)',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '6px'
+              };
+              if (dungeon.status === 'COMPLETED') {
+                statusStyle = {
+                  ...statusStyle,
+                  color: '#22c55e',
+                  background: 'rgba(34, 197, 94, 0.15)'
+                };
+              } else if (dungeon.status === 'IN PROGRESS') {
+                statusStyle = {
+                  ...statusStyle,
+                  color: 'var(--accent-gold)',
+                  background: 'rgba(255, 184, 0, 0.15)'
+                };
+              }
+
+              return (
+                <div 
+                  key={dungeon.id} 
+                  className="character-item"
+                  onClick={() => isAdmin && onEditDungeon(dungeon)}
+                  style={isAdmin ? { cursor: 'pointer' } : {}}
+                  title={isAdmin ? "Klik untuk mengedit petualangan" : ""}
+                >
+                  <div className="char-main-info">
+                    <div 
+                      className="material-icon" 
+                      style={{ 
+                        background: dungeon.icon === '🔥' ? 'rgba(255, 86, 155, 0.12)' : 'rgba(255, 155, 38, 0.12)', 
+                        borderRadius: '8px', 
+                        width: '36px', 
+                        height: '36px', 
+                        fontSize: '1.1rem' 
+                      }}
+                    >
+                      {dungeon.icon}
+                    </div>
+                    <div>
+                      <div className="char-name">{dungeon.name}</div>
+                      <div className="char-class">Rekomendasi CP: {formatNumber(dungeon.cp)}</div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={statusStyle}>{dungeon.status}</span>
+                    {isAdmin && (
+                      <span 
+                        style={{ 
+                          fontSize: '0.85rem', 
+                          opacity: 0.6,
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginLeft: '0.25rem'
+                        }}
+                      >
+                        ✏️
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <span style={{ color: '#22c55e', fontWeight: 600, fontSize: '0.85rem', background: 'rgba(34, 197, 94, 0.15)', padding: '0.25rem 0.5rem', borderRadius: '6px' }}>COMPLETED</span>
-            </div>
-            <div className="character-item">
-              <div className="char-main-info">
-                <div className="material-icon" style={{ background: 'rgba(255, 155, 38, 0.12)', borderRadius: '8px', width: '36px', height: '36px', fontSize: '1.1rem' }}>💀</div>
-                <div>
-                  <div className="char-name">Weekly Void Raid: Leviathan</div>
-                  <div className="char-class">Rekomendasi CP: 45,000</div>
-                </div>
-              </div>
-              <span style={{ color: 'var(--accent-gold)', fontWeight: 600, fontSize: '0.85rem', background: 'rgba(255, 184, 0, 0.15)', padding: '0.25rem 0.5rem', borderRadius: '6px' }}>IN PROGRESS</span>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>

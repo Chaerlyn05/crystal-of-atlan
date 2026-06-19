@@ -6,6 +6,7 @@ import CharactersTab from './components/CharactersTab';
 import EditProfileModal from './components/EditProfileModal';
 import AddCharacterModal from './components/AddCharacterModal';
 import LoginModal from './components/LoginModal';
+import EditDungeonModal from './components/EditDungeonModal';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -45,6 +46,10 @@ const DEFAULT_STATE = {
   alts: [
     { id: 1, name: "Valkyria", class: "Gunslinger", level: 55, power: 36200, avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" },
     { id: 2, name: "Zweihander", class: "Guardian", level: 42, power: 24100, avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" }
+  ],
+  dungeons: [
+    { id: 1, name: "Abyss Vault - Tower of Ruin", cp: 38000, status: "COMPLETED", icon: "🔥" },
+    { id: 2, name: "Weekly Void Raid: Leviathan", cp: 45000, status: "IN PROGRESS", icon: "💀" }
   ]
 };
 
@@ -58,6 +63,8 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('admin_token') || null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isEditDungeonOpen, setIsEditDungeonOpen] = useState(false);
+  const [selectedDungeon, setSelectedDungeon] = useState(null);
 
   // Validasi token dari sessionStorage saat pertama load
   useEffect(() => {
@@ -195,6 +202,28 @@ function App() {
     });
   };
 
+  const handleEditDungeonClick = (dungeon) => {
+    setSelectedDungeon(dungeon);
+    setIsEditDungeonOpen(true);
+  };
+
+  const handleSaveDungeon = (updatedDungeon) => {
+    setState(prev => {
+      const updatedDungeons = prev.dungeons ? prev.dungeons.map(d =>
+        d.id === updatedDungeon.id ? updatedDungeon : d
+      ) : DEFAULT_STATE.dungeons.map(d =>
+        d.id === updatedDungeon.id ? updatedDungeon : d
+      );
+
+      const newState = {
+        ...prev,
+        dungeons: updatedDungeons
+      };
+      saveToServer(newState);
+      return newState;
+    });
+  };
+
   const handleAddAlt = (newAltData) => {
     const avatars = {
       "Spellweaver": "/avatar.png",
@@ -308,7 +337,14 @@ function App() {
           </div>
         </header>
 
-        {activeTab === 'dashboard' && <DashboardTab mainCharacter={state.mainCharacter} />}
+        {activeTab === 'dashboard' && (
+          <DashboardTab 
+            mainCharacter={state.mainCharacter} 
+            dungeons={state.dungeons || DEFAULT_STATE.dungeons}
+            isAdmin={isAdmin}
+            onEditDungeon={handleEditDungeonClick}
+          />
+        )}
         {activeTab === 'profile' && <ProfileTab mainCharacter={state.mainCharacter} onUpdateGear={handleUpdateGear} isAdmin={isAdmin} />}
         {activeTab === 'characters' && (
           <CharactersTab
@@ -337,6 +373,13 @@ function App() {
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      <EditDungeonModal
+        isOpen={isEditDungeonOpen && isAdmin}
+        onClose={() => setIsEditDungeonOpen(false)}
+        dungeon={selectedDungeon}
+        onSave={handleSaveDungeon}
       />
     </div>
   );
